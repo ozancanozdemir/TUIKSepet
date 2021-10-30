@@ -70,7 +70,7 @@ server <- function(input, output) {
     df<-data.frame(Tarih,Ürün)
     p<-ggplot(df,aes(Tarih,Ürün,group=1))+geom_line()+geom_point(col="darkred",size =0.5)+
       labs(title = paste(input$urun,"Ürününün Ortalama Birim Fiyatının Yıllara Göre Değişimi"),
-           y = "Ürün Birim Fiyatı (???)")+annotate("text", x = df$Tarih[15], y = max(df$Ürün),
+           y = "Ürün Birim Fiyatı (TL)")+annotate("text", x = df$Tarih[15], y = max(df$Ürün),
                                                  label = paste("Son Tarih:",colnames(data)[ncol(data)])) +theme_bw()
     ggplotly(p, tooltip = "text")
   })
