@@ -2,6 +2,7 @@ library(shiny)
 library(ggplot2)
 library(plotly)
 library(shinythemes)
+library(lubridate)
 data<-read.csv("https://users.metu.edu.tr/ozancan/sepet.csv",sep=";")
 convert_fnc<-function(x){
   x<-as.numeric(gsub(",",".",x))
@@ -76,10 +77,12 @@ server <- function(input, output) {
   
   output$table1 <- renderTable({
     index <- which(data$Madde.adları==input$urun)
+    t <- as.character(data$Tarih)[1:(ncol(data)-2)]
+    Tarih<-as.Date(t,format = "%d.%m.%Y")
     Ürün<-as.numeric(data[index,-c(1,2)])
     biröncekiay<-paste("%",round(((Ürün[length(Ürün)]-Ürün[length(Ürün)-1])*100)/Ürün[length(Ürün)-1],2))
     biröncekiyıl<-paste("%",round(((Ürün[length(Ürün)]-Ürün[length(Ürün)-12])*100)/Ürün[length(Ürün)-12],2))
-    yılbası<-paste("%",round(((Ürün[length(Ürün)]-Ürün[length(Ürün)+1-lubridate::month(Tarih[length(Tarih)])])*100)/Ürün[length(Ürün)+1-lubridate::month(Tarih[length(Tarih)])],2))
+    yılbası<-paste("%",round(((Ürün[length(Ürün)]-Ürün[length(Ürün)+1-month(Tarih[length(Tarih)])])*100)/Ürün[length(Ürün)+1-month(Tarih[length(Tarih)])],2))
     Değişim<-c("Bir Önceki Aya Göre Değişim","Bir Önceki Yıla Göre Değişim","Yılbaşına Göre Değişim")
     Oran<-c(biröncekiay,biröncekiyıl,yılbası)
     df1<-data.frame(Değişim,Oran)
