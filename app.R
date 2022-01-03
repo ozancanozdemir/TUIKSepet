@@ -29,6 +29,8 @@ ui <- fluidPage(theme = shinytheme("yeti"),
                       
                       tableOutput("table1"),
                       tableOutput("table2"),
+                      plotlyOutput("karsilastirma"),
+                      plotlyOutput("karsilastirma1"),
                       br(),
                       div(h3(strong("Hakkinda"),style="color:darkred")),
                       p("Bu uygulama TUIK tarafindan Tuketici Fiyat Endeksi (TUFE) hesaplamak icin her ay olusturulan madde sepeti ve 
@@ -87,6 +89,28 @@ server <- function(input, output) {
     index <- which(data$Madde.adlari==input$urun)
     urun<-data[index,-c(1,2)]
     urun[seq(length(urun)-12,length(urun),1)]
+  })
+  
+  
+  output$karsilastirma <- renderPlotly({
+    Madde = data$Madde.adlari
+    Yuzde = round(((data[,ncol(data)]- data[,ncol(data)-1])*100)/ data[,ncol(data)-1],2)
+    Fark = data.frame(Madde,Yuzde)
+    Azalan = head(Fark[order(Yuzde),],10)
+    Artan =  head(Fark[order(Yuzde,decreasing = T),],10)
+    Azalan_plot<-ggplot(Azalan,aes(x=Madde,y=Yuzde))+geom_bar(stat = "identity",fill ="darkred")+labs(title="Bir Önceki Aya Göre Fiyatı En Fazla Düşen Maddeler")+theme_bw()+
+      theme(axis.text.x = element_text(angle= 90))+coord_flip()
+    ggplotly(Azalan_plot)
+  })
+  
+  output$karsilastirma1 <- renderPlotly({
+    Madde = data$Madde.adlari
+    Yuzde = round(((data[,ncol(data)]- data[,ncol(data)-1])*100)/ data[,ncol(data)-1],2)
+    Fark = data.frame(Madde,Yuzde)
+    Artan =  head(Fark[order(Yuzde,decreasing = T),],10)
+    Artan_plot<-ggplot(Artan,aes(x=Madde,y=Yuzde))+geom_bar(stat = "identity",fill ="darkred")+labs(title="Bir Önceki Aya Göre Fiyatı En Fazla Artan Maddeler")+theme_bw()+
+      theme(axis.text.x = element_text(angle = 90))+coord_flip()
+    ggplotly(Artan_plot)
   })
   
 }
