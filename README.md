@@ -1,6 +1,6 @@
 # TÜİK Sepet
 
-<img src="https://github.com/ozancanozdemir/TUIKSepet/blob/main/logo.png" width="100" height="100">
+<img src="https://github.com/ozancanozdemir/TUIKSepet/blob/main/logo.png" width="300" height="350">
 ![](https://github.com/ozancanozdemir/TUIKSepet/blob/main/logo.png)
 
 
